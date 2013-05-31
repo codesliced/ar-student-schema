@@ -2,6 +2,8 @@ require 'rake'
 require 'rspec/core/rake_task'
 require_relative 'db/config'
 require_relative 'lib/students_importer'
+require_relative 'lib/teachers_importer'
+require_relative 'lib/roster_populator'
 
 
 desc "create the database"
@@ -28,6 +30,11 @@ task "db:populate" do
   StudentsImporter.import
 end
 
+desc "populate the test database with sample data"
+task "db:populate_teachers" do
+  TeachersImporter.import
+end
+
 desc 'Retrieves the current schema version number'
 task "db:version" do
   puts "Current version: #{ActiveRecord::Migrator.current_version}"
@@ -37,3 +44,17 @@ desc "Run the specs"
 RSpec::Core::RakeTask.new(:specs)
 
 task :default  => :specs
+
+desc 'Play with rosters'
+task "console" do
+  puts Teacher.all
+  student = Student.first
+  puts student.inspect
+
+  end
+
+
+desc 'Assign keys to roster table'
+task "db:rosterPopulator" do
+  RosterPopulator.import
+end
